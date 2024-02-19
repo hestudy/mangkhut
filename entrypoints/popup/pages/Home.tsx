@@ -13,8 +13,8 @@ const Home = () => {
   });
 
   return (
-    <div className="w-800px h-600px flex">
-      <div className="w-280px border-r border-dashed">demo</div>
+    <div className="w-[800px] h-[600px] flex">
+      <div className="w-[280px] border-r border-dashed">demo</div>
       <div className="flex-1 w-0"></div>
     </div>
   );

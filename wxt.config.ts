@@ -13,7 +13,7 @@ export default defineConfig({
     },
   },
   manifest: {
-    permissions: ["tabs"],
+    permissions: ["tabs", "storage"],
   },
   alias: {
     "@shadcn": path.resolve(__dirname, "entrypoints"),

@@ -1,11 +1,28 @@
-import Provider from "./Provider";
+import { RouterProvider, createMemoryRouter } from "react-router-dom";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
+import AuthLayout from "./layouts/AuthLayout";
 
 function App() {
   return (
-    <Provider>
-      <Login></Login>
-    </Provider>
+    <RouterProvider
+      router={createMemoryRouter([
+        {
+          path: "/",
+          element: <AuthLayout></AuthLayout>,
+          children: [
+            {
+              index: true,
+              element: <Home></Home>,
+            },
+          ],
+        },
+        {
+          path: "/login",
+          element: <Login></Login>,
+        },
+      ])}
+    ></RouterProvider>
   );
 }
 

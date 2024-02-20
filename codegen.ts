@@ -2,12 +2,12 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   overwrite: true,
-  documents: "entrypoints/**/*.tsx",
+  documents: "entrypoints/**/*.{tsx,ts}",
+  schema: ["system.graphql", "schema.graphql"],
   generates: {
-    "entrypoints/gql/system/": {
+    "entrypoints/gql/": {
       preset: "client",
       plugins: [],
-      schema: "system.graphql",
     },
   },
   ignoreNoDocuments: true,

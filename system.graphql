@@ -13,6 +13,99 @@ type Query {
   users_aggregated(groupBy: [String], filter: directus_users_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_users_aggregated!]!
 }
 
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+enum graphql_sdl_scope {
+  items
+  system
+}
+
+type server_info {
+  project: server_info_project
+}
+
+type server_info_project {
+  project_name: String
+  project_descriptor: String
+  project_logo: String
+  project_color: String
+  default_language: String
+  public_foreground: String
+  public_background: String
+  public_note: String
+  custom_css: String
+}
+
+type directus_users {
+  title: String
+  avatar(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+}
+
+type directus_files {
+  id: ID!
+}
+
+input directus_files_filter {
+  id: string_filter_operators
+  _and: [directus_files_filter]
+  _or: [directus_files_filter]
+}
+
+input string_filter_operators {
+  _eq: String
+  _neq: String
+  _contains: String
+  _icontains: String
+  _ncontains: String
+  _starts_with: String
+  _nstarts_with: String
+  _istarts_with: String
+  _nistarts_with: String
+  _ends_with: String
+  _nends_with: String
+  _iends_with: String
+  _niends_with: String
+  _in: [String]
+  _nin: [String]
+  _null: Boolean
+  _nnull: Boolean
+  _empty: Boolean
+  _nempty: Boolean
+}
+
+type directus_files_aggregated {
+  group: JSON
+  countAll: Int
+  count: directus_files_aggregated_count
+  countDistinct: directus_files_aggregated_count
+}
+
+type directus_files_aggregated_count {
+  id: Int
+}
+
+input directus_users_filter {
+  title: string_filter_operators
+  avatar: directus_files_filter
+  _and: [directus_users_filter]
+  _or: [directus_users_filter]
+}
+
+type directus_users_aggregated {
+  group: JSON
+  countAll: Int
+  count: directus_users_aggregated_count
+  countDistinct: directus_users_aggregated_count
+}
+
+type directus_users_aggregated_count {
+  title: Int
+  avatar: Int
+}
+
 type Mutation {
   auth_login(email: String!, password: String!, mode: auth_mode, otp: String): auth_tokens
   auth_refresh(refresh_token: String, mode: auth_mode): auth_tokens
@@ -31,94 +124,32 @@ type Mutation {
   users_invite_accept(token: String!, password: String!): Boolean
 }
 
-type Subscription {
-  directus_files_mutated(event: EventEnum): directus_files_mutated
-  directus_users_mutated(event: EventEnum): directus_users_mutated
-  scrapy_mutated(event: EventEnum): scrapy_mutated
-}
-
-"""The `Boolean` scalar type represents `true` or `false`."""
-scalar Boolean
-
-"""ISO8601 Date values"""
-scalar Date
-
-"""BigInt value"""
-scalar GraphQLBigInt
-
-"""
-The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
-"""
-scalar ID
-
-"""
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
-"""
-scalar Int
-
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
-
-"""
-The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
-"""
-scalar String
-
-"""Represents NULL values"""
-scalar Void
-
-enum auth_mode {
-  json
-  cookie
-}
-
-enum EventEnum {
-  create
-  update
-  delete
-}
-
-enum graphql_sdl_scope {
-  items
-  system
-}
-
 type auth_tokens {
   access_token: String
   expires: GraphQLBigInt
   refresh_token: String
 }
 
-type count_functions {
-  count: Int
+"""BigInt value"""
+scalar GraphQLBigInt
+
+enum auth_mode {
+  json
+  cookie
 }
 
-type datetime_functions {
-  year: Int
-  month: Int
-  week: Int
-  day: Int
-  weekday: Int
-  hour: Int
-  minute: Int
-  second: Int
+type users_me_tfa_generate_data {
+  secret: String
+  otpauth_url: String
 }
 
-type directus_files {
-  id: ID!
-}
+"""Represents NULL values"""
+scalar Void
 
-type directus_files_aggregated {
-  group: JSON
-  countAll: Int
-  count: directus_files_aggregated_count
-  countDistinct: directus_files_aggregated_count
-}
-
-type directus_files_aggregated_count {
-  id: Int
+type Subscription {
+  directus_files_mutated(event: EventEnum): directus_files_mutated
+  directus_users_mutated(event: EventEnum): directus_users_mutated
+  scrapy_mutated(event: EventEnum): scrapy_mutated
 }
 
 type directus_files_mutated {
@@ -127,25 +158,22 @@ type directus_files_mutated {
   data: directus_files
 }
 
-type directus_users {
-  title: String
-}
-
-type directus_users_aggregated {
-  group: JSON
-  countAll: Int
-  count: directus_users_aggregated_count
-  countDistinct: directus_users_aggregated_count
-}
-
-type directus_users_aggregated_count {
-  title: Int
+enum EventEnum {
+  create
+  update
+  delete
 }
 
 type directus_users_mutated {
   key: ID!
   event: EventEnum
   data: directus_users
+}
+
+type scrapy_mutated {
+  key: ID!
+  event: EventEnum
+  data: scrapy
 }
 
 type scrapy {
@@ -170,63 +198,20 @@ type scrapy {
   prs: String
 }
 
-type scrapy_mutated {
-  key: ID!
-  event: EventEnum
-  data: scrapy
+"""ISO8601 Date values"""
+scalar Date
+
+type datetime_functions {
+  year: Int
+  month: Int
+  week: Int
+  day: Int
+  weekday: Int
+  hour: Int
+  minute: Int
+  second: Int
 }
 
-type server_info {
-  project: server_info_project
-}
-
-type server_info_project {
-  project_name: String
-  project_descriptor: String
-  project_logo: String
-  project_color: String
-  default_language: String
-  public_foreground: String
-  public_background: String
-  public_note: String
-  custom_css: String
-}
-
-type users_me_tfa_generate_data {
-  secret: String
-  otpauth_url: String
-}
-
-input directus_files_filter {
-  id: string_filter_operators
-  _and: [directus_files_filter]
-  _or: [directus_files_filter]
-}
-
-input directus_users_filter {
-  title: string_filter_operators
-  _and: [directus_users_filter]
-  _or: [directus_users_filter]
-}
-
-input string_filter_operators {
-  _eq: String
-  _neq: String
-  _contains: String
-  _icontains: String
-  _ncontains: String
-  _starts_with: String
-  _nstarts_with: String
-  _istarts_with: String
-  _nistarts_with: String
-  _ends_with: String
-  _nends_with: String
-  _iends_with: String
-  _niends_with: String
-  _in: [String]
-  _nin: [String]
-  _null: Boolean
-  _nnull: Boolean
-  _empty: Boolean
-  _nempty: Boolean
+type count_functions {
+  count: Int
 }

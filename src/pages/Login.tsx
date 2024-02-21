@@ -6,12 +6,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/entrypoints/components/ui/form";
+} from "@/src/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@shadcn/components/ui/button";
-import { Input } from "@shadcn/components/ui/input";
-import { graphql } from "@shadcn/gql";
-import systemClient from "@shadcn/popup/client";
+import { Button } from "@/src/components/ui/button";
+import { Input } from "@/src/components/ui/input";
+import { graphql } from "@/src/gql";
+import systemClient from "@/src/client";
 import { useRequest } from "ahooks";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";

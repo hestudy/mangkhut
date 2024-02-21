@@ -1,7 +1,7 @@
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import AuthLayout from "./layouts/AuthLayout";
+import Home from "../../src/pages/Home";
+import Login from "../../src/pages/Login";
+import AuthLayout from "../../src/layouts/AuthLayout";
 
 function App() {
   return (

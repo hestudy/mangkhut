@@ -1,10 +1,10 @@
-import { graphql } from "@shadcn/gql";
+import { graphql } from "@/src/gql";
 import { useRequest } from "ahooks";
 import { Outlet, useNavigate } from "react-router-dom";
 import systemClient from "../client";
 import { useSetAtom } from "jotai";
 import userAtom from "../atoms/user";
-import { Loading } from "@shadcn/components/Loading";
+import { Loading } from "@/src/components/Loading";
 
 const Users_me = graphql(`
   query Users_me {

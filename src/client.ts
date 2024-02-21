@@ -1,4 +1,4 @@
-import { graphql } from "@shadcn/gql";
+import { graphql } from "@/src/gql";
 import dayjs from "dayjs";
 import request, {
   GraphQLClient,

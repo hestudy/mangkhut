@@ -2,13 +2,19 @@ import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from "@shadcn/components/ui/resizable";
+} from "@/src/components/ui/resizable";
 import { useRequest } from "ahooks";
 import { useAtomValue } from "jotai";
 import userAtom from "../atoms/user";
-import { Avatar, AvatarImage } from "@shadcn/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/src/components/ui/avatar";
 import { client, endpoint } from "../client";
-import { graphql } from "@shadcn/gql";
+import { graphql } from "@/src/gql";
+import { useMemo } from "react";
+import { CollectionQuery } from "../gql/graphql";
+
+type TreeData = CollectionQuery["collection"][0] & {
+  children: TreeData[];
+};
 
 const Collection = graphql(`
   query Collection($sort: [String]) {
@@ -25,17 +31,39 @@ const Collection = graphql(`
   }
 `);
 
+const getTreeData = (
+  data: CollectionQuery["collection"],
+  parent?: string
+): TreeData[] => {
+  return data
+    .filter((item) => item.parent?.id === parent)
+    .map((item) => {
+      return {
+        ...item,
+        children: getTreeData(data, item.id),
+      };
+    });
+};
+
 const Home = () => {
   const user = useAtomValue(userAtom);
 
-  useRequest(async () => {
+  const { loading, data } = useRequest(async () => {
     const res = await client.request(Collection, {
-      sort: ["sort", "-date_updated", "-date_created"],
+      sort: ["sort", "-date_created"],
     });
     if (res.collection) {
       return res.collection;
     }
   });
+
+  const treeData = useMemo(() => {
+    if (data) {
+      return getTreeData(data);
+    }
+  }, [data]);
+
+  console.log(treeData);
 
   // useRequest(async () => {
   //   const tabs = await browser.tabs.query({

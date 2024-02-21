@@ -5,7 +5,7 @@ const config: CodegenConfig = {
   documents: "entrypoints/**/*.{tsx,ts}",
   schema: ["system.graphql", "schema.graphql"],
   generates: {
-    "entrypoints/gql/": {
+    "src/gql/": {
       preset: "client",
       plugins: [],
     },

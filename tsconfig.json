@@ -6,8 +6,6 @@
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
-      "@shadcn": ["./entrypoints"],
-      "@shadcn/*": ["./entrypoints/*"],
       "@": ["."],
       "@/*": ["./*"],
       "~": ["."],

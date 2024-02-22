@@ -11,14 +11,15 @@ import { client, endpoint } from "../client";
 import { graphql } from "@/src/gql";
 import { useMemo } from "react";
 import { CollectionQuery } from "../gql/graphql";
-
-type TreeData = CollectionQuery["collection"][0] & {
-  children: TreeData[];
-};
+import { ScrollArea } from "../components/ui/scroll-area";
+import { Loading } from "../components/Loading";
+import Empty from "../components/Empty";
+import { TreeData } from "../types";
+import TreeComponent from "../components/TreeComponent";
 
 const Collection = graphql(`
   query Collection($sort: [String]) {
-    collection(sort: $sort) {
+    collection(sort: $sort, limit: -1) {
       title
       id
       sort
@@ -63,8 +64,6 @@ const Home = () => {
     }
   }, [data]);
 
-  console.log(treeData);
-
   // useRequest(async () => {
   //   const tabs = await browser.tabs.query({
   //     active: true,
@@ -90,9 +89,23 @@ const Home = () => {
               <span className="truncate">{user?.title}</span>
             </div>
             <div className="flex-1 h-0">
-              <div className="h-full overflow-y-auto">
-                <div className="h-[1000px]">demo</div>
-              </div>
+              {loading && (
+                <div className="h-full flex justify-center items-center">
+                  <Loading></Loading>
+                </div>
+              )}
+              {!loading && (
+                <>
+                  {(!treeData || treeData.length === 0) && <Empty></Empty>}
+                  {treeData && treeData.length > 0 && (
+                    <>
+                      <ScrollArea className="h-full">
+                        <TreeComponent data={treeData}></TreeComponent>
+                      </ScrollArea>
+                    </>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </ResizablePanel>
